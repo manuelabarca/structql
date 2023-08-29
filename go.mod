@@ -1,4 +1,4 @@
-module github.com/cescoferraro/structql
+module github.com/manuelabarca/structql
 
 go 1.14
 
