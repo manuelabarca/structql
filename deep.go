@@ -47,7 +47,7 @@ func deepFields(iface interface{}) *graphql.Object {
 	for i := 0; i < rType.NumField(); i++ {
 		irValue, itValue := rValue.Field(i), rType.Field(i)
 		jsonTag := strings.Split(itValue.Tag.Get(defaultTag), ",")[0]
-		fieldName := toGraphQLFieldName(not(jsonTag, irValue.Type()))
+		fieldName := toGraphQLFieldName(jsonTag)
 		switch irValue.Kind() {
 		case reflect.Struct:
 			if irValue.Type().String() == "time.Time" {
@@ -159,13 +159,6 @@ func mapReflectScalar(v reflect.Value) *graphql.Scalar {
 		}
 	}
 	return graphql.String
-}
-
-func not(tag string, t reflect.Type) string {
-	if tag != "" {
-		return tag
-	}
-	return split(t)
 }
 
 func split(t reflect.Type) string {
