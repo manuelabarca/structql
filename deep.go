@@ -30,6 +30,16 @@ func SetDefaultTag(tag string) {
 	defaultTag = tag
 }
 
+func toGraphQLFieldName(fieldName string) string {
+    fieldName = strings.ReplaceAll(fieldName, "-", "_")
+
+    parts := strings.Split(fieldName, "_")
+    for i := range parts {
+        parts[i] = strings.Title(parts[i])
+    }
+    return strings.Join(parts, "")
+}
+
 func deepFields(iface interface{}) *graphql.Object {
 	fields := graphql.Fields{}
 	rValue := reflect.ValueOf(iface)
@@ -37,7 +47,7 @@ func deepFields(iface interface{}) *graphql.Object {
 	for i := 0; i < rType.NumField(); i++ {
 		irValue, itValue := rValue.Field(i), rType.Field(i)
 		jsonTag := strings.Split(itValue.Tag.Get(defaultTag), ",")[0]
-		fieldName := not(jsonTag, irValue.Type())
+		fieldName := toGraphQLFieldName(not(jsonTag, irValue.Type()))
 		switch irValue.Kind() {
 		case reflect.Struct:
 			if irValue.Type().String() == "time.Time" {
